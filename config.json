@@ -1,0 +1,11 @@
+{
+    "mcp_server": {
+        "host": "localhost",
+        "port": 5000
+    },
+    "elasticsearch": {
+        "host": "localhost",
+        "port": 9200,
+        "index": "cvesearch"
+    }
+} 
