@@ -31,7 +31,8 @@ Bạn là một trợ lý an ninh mạng. Dưới đây là ví dụ về một 
 {{
     "cveMetadata": {{
         "cveId": "CVE-2025-1944",
-        "state": "PUBLISHED"
+        "state": "PUBLISHED",
+        "datePublished": "2025-01-28T18:27:32.084Z"
     }},
     "containers": {{
         "cna": {{
@@ -43,16 +44,30 @@ Bạn là một trợ lý an ninh mạng. Dưới đây là ví dụ về một 
 }}
 </JSON>
 
-Nhiệm vụ của bạn là: Chỉ sinh ra Elasticsearch Query DSL (dạng JSON) để tìm kiếm các bản ghi mà trường "containers.cna.descriptions.value" chứa thông tin liên quan đến chủ đề người dùng hỏi. Nếu người dùng hỏi về số lượng (ví dụ: 'liệt kê 10 CVE', 'top 5 CVE', 'show 3 CVE'), hãy thêm trường "size": <số lượng> vào query. Không sinh query cho trường khác. Không giải thích gì thêm, chỉ trả về JSON query.
+Nhiệm vụ của bạn là: Chỉ sinh ra Elasticsearch Query DSL (dạng JSON) để tìm kiếm các bản ghi mà trường "containers.cna.descriptions.value" chứa thông tin liên quan đến chủ đề người dùng hỏi. Nếu người dùng hỏi về số lượng (ví dụ: 'liệt kê 10 CVE', 'top 5 CVE', 'show 3 CVE'), hãy thêm trường "size": <số lượng> vào query. Nếu người dùng đề cập đến thời gian (ví dụ năm 2025), hãy thêm điều kiện lọc theo trường "cveMetadata.datePublished" để chỉ lấy các CVE được công bố trong năm 2025. Không sinh query cho trường khác. Không giải thích gì thêm, chỉ trả về JSON query.
 
 Ví dụ:
-Nếu người dùng hỏi: "Liệt kê 10 CVE về XSS"
+Nếu người dùng hỏi: "Liệt kê 10 CVE về XSS trong năm 2025"
 Thì bạn trả về:
 {{
   "size": 10,
   "query": {{
-    "match": {{
-      "containers.cna.descriptions.value": "XSS"
+    "bool": {{
+      "must": [
+        {{
+          "match": {{
+            "containers.cna.descriptions.value": "XSS"
+          }}
+        }},
+        {{
+          "range": {{
+            "cveMetadata.datePublished": {{
+              "gte": "2025-01-01T00:00:00Z",
+              "lte": "2025-12-31T23:59:59Z"
+            }}
+          }}
+        }}
+      ]
     }}
   }}
 }}
@@ -64,6 +79,32 @@ Thì bạn trả về:
   "query": {{
     "match": {{
       "containers.cna.descriptions.value": "SQL injection"
+    }}
+  }}
+}}
+
+Ví dụ:
+Nếu người dùng hỏi: "Liệt kê 10 CVE về XSS từ tháng 1 đến tháng 3 năm 2025"
+Thì bạn trả về:
+{{
+  "size": 10,
+  "query": {{
+    "bool": {{
+      "must": [
+        {{
+          "match": {{
+            "containers.cna.descriptions.value": "XSS"
+          }}
+        }},
+        {{
+          "range": {{
+            "cveMetadata.datePublished": {{
+              "gte": "2025-01-01T00:00:00Z",
+              "lte": "2025-03-31T23:59:59Z"
+            }}
+          }}
+        }}
+      ]
     }}
   }}
 }}
@@ -98,11 +139,38 @@ Câu hỏi: {user_question}
 def search_cves(user_question: str) -> dict:
     """
     Nhận câu hỏi tự nhiên, dùng Llama sinh query, sau đó tìm kiếm trên Elasticsearch.
+    Trả về thông tin ngắn gọn về các CVE.
     """
     try:
         query = llama_generate_query(user_question)
         result = es.search(index=INDEX, body=query)
-        return result
+        
+        # Tạo response ngắn gọn
+        simplified_results = []
+        for hit in result.get('hits', {}).get('hits', []):
+            source = hit.get('_source', {})
+            cna = source.get('containers', {}).get('cna', {})
+            
+            # Lấy danh sách URL từ references
+            urls = []
+            for ref in cna.get('references', []):
+                if 'url' in ref:
+                    urls.append(ref['url'])
+            
+            simplified_cve = {
+                'cve_id': source.get('cveMetadata', {}).get('cveId', ''),
+                'title': cna.get('title', ''),
+                'description': cna.get('descriptions', [{}])[0].get('value', '') if cna.get('descriptions') else '',
+                'score': hit.get('_score', 0),
+                'date_published': source.get('cveMetadata', {}).get('datePublished', ''),
+                'urls': urls
+            }
+            simplified_results.append(simplified_cve)
+            
+        return {
+            'total': result.get('hits', {}).get('total', {}).get('value', 0),
+            'results': simplified_results
+        }
     except Exception as e:
         return {"error": str(e)}
 
