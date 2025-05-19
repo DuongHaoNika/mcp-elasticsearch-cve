@@ -151,11 +151,26 @@ def search_cves(user_question: str) -> dict:
             source = hit.get('_source', {})
             cna = source.get('containers', {}).get('cna', {})
             
-            # Lấy danh sách URL từ references
             urls = []
             for ref in cna.get('references', []):
                 if 'url' in ref:
                     urls.append(ref['url'])
+            
+            # Lấy thông tin về vendor và sản phẩm bị ảnh hưởng
+            affected = []
+            for aff in cna.get('affected', []):
+                affected_info = {
+                    'vendor': aff.get('vendor', ''),
+                    'product': aff.get('product', ''),
+                    'versions': aff.get('versions', [])
+                }
+                affected.append(affected_info)
+            
+            # Lấy thông tin CVSS
+            metrics = []
+            for metric in cna.get('metrics', []):
+                if 'cvssV3_1' in metric:
+                    metrics.append(metric)
             
             simplified_cve = {
                 'cve_id': source.get('cveMetadata', {}).get('cveId', ''),
@@ -163,8 +178,11 @@ def search_cves(user_question: str) -> dict:
                 'description': cna.get('descriptions', [{}])[0].get('value', '') if cna.get('descriptions') else '',
                 'score': hit.get('_score', 0),
                 'date_published': source.get('cveMetadata', {}).get('datePublished', ''),
-                'urls': urls
+                'urls': urls,
+                'affected': affected,
+                'metrics': metrics
             }
+            print(simplified_cve)
             simplified_results.append(simplified_cve)
             
         return {
