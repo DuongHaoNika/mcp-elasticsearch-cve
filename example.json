@@ -1,0 +1,460 @@
+[
+    {
+        "question": "Show 3 CVE about XSS",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "XSS"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about XSS in 2024",
+        "answer": {
+            "size": 3,
+            "query": {
+            "bool": {
+                "must": [
+                {
+                    "match": {
+                    "containers.cna.descriptions.value": "XSS"
+                    }
+                },
+                {
+                    "range": {
+                    "cveMetadata.datePublished": {
+                                    "gte": "2024-01-01T00:00:00Z",
+                                    "lte": "2024-12-31T23:59:59Z"
+                    }
+                    }
+                }
+                ]
+            }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about XSS from 1/2024 to 7/2024",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "XSS"
+                            }
+                        },
+                        {
+                            "range": {
+                                "cveMetadata.datePublished": {
+                                    "gte": "2024-01-01T00:00:00Z",
+                                    "lte": "2024-07-31T23:59:59Z"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE have highest CVSS Score",
+        "answer": {
+            "size": 3,
+            "sort": [
+                {
+                    "containers.cna.metrics.cvssV3_1.baseScore": {
+                        "order": "desc"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "question": "Show 3 lastest CVE",
+        "answer": {
+            "size": 3,
+            "sort": [
+                {
+                    "cveMetadata.datePublished": {
+                        "order": "desc"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "question": "Show 3 CVE about XSS have highest CVSS Score",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "XSS"
+                            }
+                        }
+                    ]
+                }
+            },
+            "sort": [
+                {
+                    "containers.cna.metrics.cvssV3_1.baseScore": {
+                        "order": "desc"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "question": "Show details information about CVE-2024-12345",
+        "answer": {
+            "query": {
+                "term": {
+                    "cveMetadata.cveId": "CVE-2024-12345"
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about SQL injection in WordPress",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "SQL injection"
+                            }
+                        },
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "WordPress"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about buffer overflow in Linux kernel",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "buffer overflow"
+                            }
+                        },
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "Linux kernel"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about remote code execution in Apache",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "remote code execution"
+                            }
+                        },
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "Apache"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about authentication bypass",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "authentication bypass"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about path traversal",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "path traversal"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about privilege escalation",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "privilege escalation"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about deserialization vulnerability",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "deserialization vulnerability"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about CSRF in web applications",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "CSRF"
+                            }
+                        },
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "web application"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about file upload vulnerability",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "file upload vulnerability"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about command injection in PHP",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "command injection"
+                            }
+                        },
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "PHP"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about XML external entity injection",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "XML external entity injection"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about insecure direct object reference",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "insecure direct object reference"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about server-side request forgery",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.descriptions.value": "server-side request forgery"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about Windows",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "Windows"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about Linux",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "Linux"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE about MacOS",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "MacOS"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 2 CVE related vendor: vendor_name",
+        "answer": {
+            "size": 2,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.affected.vendor": "vendor_name"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        "question": "Show 3 CVE relate product: product_name",
+        "answer": {
+            "size": 3,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "containers.cna.affected.product": "product_name"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+]

@@ -86,6 +86,8 @@ async def main(message: cl.Message):
     
     # Gọi hàm search_cves từ main.py
     result = search_cves(message.content)
+
+    print(result)
     
     if "error" in result:
         await cl.Message(

@@ -1,3 +1,5 @@
 fastmcp
-elasticsearch==6.8.2
+elasticsearch==6.3.1
 httpx
+chromadb==0.4.24
+numpy==1.26.4
